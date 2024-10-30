@@ -20,7 +20,10 @@ app.get('/search', (req, res) => {
         name.toLowerCase().startsWith(query)
     ).slice(0, 10);
 
-    res.json(suggestions);
+    setTimeout(() => {
+        res.json(suggestions);
+    }, generateRandomDelay())
+
 });
 
 // Port Number
@@ -30,3 +33,23 @@ const port = 5000;
 app.listen(port, () => {
     console.log(`Server running on port http://localhost:${port}/search?q=al.`)
 })
+
+function generateRandomDelay() {
+    // Generate a random number between 0 and 1
+    const random = Math.random();
+
+    // Determine if we should skew towards 150ms (65% chance)
+    const shouldSkew = random < 0.65;
+
+    let result;
+    if (shouldSkew) {
+        // If skewing, use a distribution that favors lower values
+        result = 150 + Math.pow(Math.random(), 2) * 650;
+    } else {
+        // If not skewing, use a uniform distribution
+        result = 150 + Math.random() * 650;
+    }
+
+    // Round to nearest integer
+    return Math.round(result);
+}
